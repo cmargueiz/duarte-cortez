@@ -216,19 +216,19 @@
         <div class="carousel__track" id="carouselTrack">
 
             <article class="carousel__slide">
-                <video src="media/1.mp4" autoplay muted loop playsinline></video>
+                <video src="media/1.mp4" muted loop playsinline preload="metadata"></video>
                 <button class="audio-btn show" id="audioBtn">
                     <i class="fa-solid fa-play"></i>
                 </button>
             </article>
 
-            <article class="carousel__slide"><video src="media/2.mp4" autoplay muted loop playsinline></video>
+            <article class="carousel__slide"><video src="media/2.mp4" muted loop playsinline preload="metadata"></video>
             <a class="hotspot" href="https://maps.app.goo.gl/YToMzbLiYFqqXYxW9" target="_blank"></a>
             </article>
-            <article class="carousel__slide"><video src="media/3.mp4" autoplay muted loop playsinline></video></article>
+            <article class="carousel__slide"><video src="media/3.mp4" muted loop playsinline preload="metadata"></video></article>
 
             <article class="carousel__slide">
-                <video src="media/4.mp4" autoplay muted loop playsinline></video>
+                <video src="media/4.mp4" muted loop playsinline preload="metadata"></video>
                 <div class="slide6-ui">
                     <a class="confirm-btn show"
                         href="https://wa.me/50375309661?text=Hola%20%F0%9F%92%8D%E2%9C%A8%20Con%20mucha%20felicidad%20confirmo%20mi%20asistencia%20a%20su%20boda.%20%C2%A1Nos%20vemos%20pronto!">
@@ -246,7 +246,7 @@
         </div>
     </section>
 
-    <audio id="audio" src="musica.mpeg" preload="auto"></audio>
+    <audio id="audio" src="musica.m4a" preload="auto"></audio>
 
     <script>
         function tryOpenWhatsApp(e, phone, msg) {
@@ -283,6 +283,7 @@
             const audio = document.getElementById('audio');
             const btn = document.getElementById('audioBtn');
             const icon = btn.querySelector('i');
+            let activeVideo = null;
 
             function setBtnPlaying(isPlaying) {
                 btn.classList.toggle('is-playing', isPlaying);
@@ -304,6 +305,17 @@
 
             function update() {
                 const idx = currentIndex();
+                const nextVideo = slides[idx]?.querySelector('video') ?? null;
+                if (nextVideo !== activeVideo) {
+                    activeVideo?.pause();
+                    activeVideo = nextVideo;
+                    if (activeVideo) {
+                        activeVideo.play().catch(error => {
+                            console.error('No se pudo reproducir el video:', error);
+                        });
+                    }
+                }
+
                 const slide6 = slides[5]?.querySelector('.slide6-ui');
                 if (slide6) {
                     const btns = slide6.querySelectorAll('.confirm-btn');
